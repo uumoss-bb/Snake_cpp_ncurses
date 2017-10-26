@@ -1,4 +1,5 @@
 
+//tutorial URL : https://www.youtube.com/watch?v=OAv2QsOZ4l4&t=264s
 //gcc main.cpp -o play.out -lncurses ||| this command compiles this file.
 //./play.out ||| this command executes the compiled file.
 
@@ -6,7 +7,7 @@
 #include <ncurses.h>
 
 bool gameOver;
-const int width = 40, height = 20;
+const int width = 20, height = 20;
 int x, y, fruitX, fruitY, score;  //this is the position of the head of the snake, and its food.
 enum eDirection {STOP = 0, LEFT, RIGHT, UP, DOWN};  //this is an enumeral. The direction the snake is going.
 eDirection dir;
@@ -56,18 +57,67 @@ void Draw() {
 
   mvprintw(23, 33, "Score %d", score);  //this displays the score.
 
-  refresh();  //this gets the building process going
-
   getch();  //when a key is pressed this translates that pressed key into a readable int.
-  endwin();
+  endwin(); //this has to be called after ending curses mode
+  refresh();  //this gets the building process going
 
 }
 
 void Input() {
 
+  keypad(stdscr, TRUE); //this prepares the computer to take in inputs.
+  halfdelay(1); //this makes it so the snake keeps moving the direction you give it.
+
+  int c = getch(); //this save the ACII code of the key that was pressed to c.
+
+  //this handles what happens when specific btns are pressed.
+  switch(c) {
+    case 97:
+      dir = LEFT;
+      break;
+    case 100:
+      dir = RIGHT;
+      break;
+    case 119:
+      dir = UP;
+      break;
+    case 115:
+      dir = DOWN;
+      break;
+    case 113: //113 is the ACII code for q.
+      gameOver = true;
+      break;
+  }
 }
 
 void Logic() {
+
+//this makes the snake move
+  switch(dir) {
+    case LEFT:
+      x--;
+      break;
+    case RIGHT:
+      x++;
+      break;
+    case UP:
+      y--;
+      break;
+    case DOWN:
+      y++;
+      break;
+    default :
+      break;
+  }
+
+  if(x > width || x < 1 || y > height || y < 1) {
+    gameOver = true;
+  }
+  if(x == fruitX && y == fruitY) {
+    score++;
+    fruitX = (rand() % width) + 1;  //this respawns food.
+    fruitY = (rand() % height) + 1;
+  }
 
 }
 
@@ -76,11 +126,12 @@ int main() {
   Setup();
 
   while(!gameOver) {
-
     Draw();
     Input();
     Logic();
   }
 
+  getch();
+  endwin();
   return 0;
 }
