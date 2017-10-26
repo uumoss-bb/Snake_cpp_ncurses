@@ -70,24 +70,28 @@ void Input() {
 
   int c = getch(); //this save the ACII code of the key that was pressed to c.
 
-  //this handles what happens when specific btns are pressed.
-  switch(c) {
-    case 97:
-      dir = LEFT;
-      break;
-    case 100:
-      dir = RIGHT;
-      break;
-    case 119:
-      dir = UP;
-      break;
-    case 115:
-      dir = DOWN;
-      break;
-    case 113: //113 is the ACII code for q.
-      gameOver = true;
-      break;
-  }
+    if (c != ERR) {
+
+      //this handles what happens when specific btns are pressed.
+      switch(c) {
+        case KEY_LEFT:
+          dir = LEFT;
+          break;
+        case KEY_RIGHT:
+          dir = RIGHT;
+          break;
+        case KEY_UP:
+          dir = UP;
+          break;
+        case KEY_DOWN:
+          dir = DOWN;
+          break;
+        case 113: //113 is the ACII code for q.
+          gameOver = true;
+          break;
+      }
+    }
+
 }
 
 void Logic() {
