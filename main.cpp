@@ -30,7 +30,6 @@ void Setup() {
   y = height / 2;
   fruitX = (rand() % width) + 1;  //this sets position of the food.
   fruitY = (rand() % height) + 1;
-  score = 0;
 
 }
 
@@ -59,6 +58,9 @@ void Draw() {
         for (int k = 0; k < ntail; k++) { //this spawns your tail parts.
           if(tailX[k] == j && tailY[k] == i) {
             mvprintw(i, j, "o");
+          }
+          else if(dir == STOP && tailX[k] == j && tailY[k] == i) {
+            mvprintw(i, j, " ");
           }
         }
       }
@@ -159,6 +161,33 @@ void Logic() {
 
 }
 
+void gameOverDraw() {
+
+    clear();
+    int endGameW = 40;
+    int endGameH = 5;
+    //building process
+    for (int i = 0; i < endGameH + 2; i++) {
+
+      for (int j = 0; j < endGameW + 2; j++) {
+
+        if(i == 0 | i == endGameH + 1) {  //this builds the top and bottom boundaries.
+          mvprintw(i, j, "+");
+        }
+        else if(j == 0 | j == endGameW + 1) {  //this builds the left and right boundaries.
+          mvprintw(i, j, "+");
+        }
+      }
+    }
+
+    mvprintw(2, 15, "GAME OVER");  //this displays the score.
+    mvprintw(3, 13, "Final Score %d", score);  //this displays the score.
+    mvprintw(8, 2, "--------------------------------------");
+    endwin(); //this has to be called after ending curses mode
+    refresh();  //this gets the building process going
+
+}
+
 int main() {
 
   Setup();
@@ -169,6 +198,10 @@ int main() {
     Logic();
   }
 
-  endwin();
-  return 0;
+  while(gameOver) {
+    Setup();
+    gameOverDraw();
+    return 0;
+  }
+
 }
